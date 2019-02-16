@@ -1,0 +1,16 @@
+#!/bin/bash
+# find all the directories
+find . -type d | while read -r dir
+do
+    # a subdirectory might no longer exist if a parent has been archived before
+    if [ -d "$dir" ]
+    then
+        # search any new file in the directory
+        newfilefound=`find $dir -type f -atime -30 -print -quit`
+
+        if [ -z "$newfilefound" ]
+        then
+            tar -zcvf $dir.tgz $dir
+        fi
+   fi
+done
